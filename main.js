@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReviews();
   initFaq();
   initSeriesSlider();
+  initStickyCart();
 });
 
 /* ---------------- Countdown timers ---------------- */
@@ -148,18 +149,98 @@ function initSwatches() {
   });
 }
 
-/* ---------------- Quantity stepper ---------------- */
+/* ---------------- Quantity stepper (shared between main buy box + sticky bar) ---------------- */
+let sharedQty = 1;
+function setQty(newQty) {
+  sharedQty = Math.max(1, Math.min(10, newQty));
+  const mainVal = document.getElementById('qtyValue');
+  const stickyVal = document.getElementById('stickyQtyValue');
+  if (mainVal) mainVal.textContent = sharedQty;
+  if (stickyVal) stickyVal.textContent = sharedQty;
+}
 function initQtyStepper() {
   const val = document.getElementById('qtyValue');
   if (!val) return;
-  let qty = 1;
   document.querySelectorAll('[data-qty]').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (btn.dataset.qty === 'plus') qty = Math.min(qty + 1, 10);
-      else qty = Math.max(qty - 1, 1);
-      val.textContent = qty;
+      setQty(btn.dataset.qty === 'plus' ? sharedQty + 1 : sharedQty - 1);
     });
   });
+}
+
+/* ---------------- Sticky add-to-cart bar ---------------- */
+function initStickyCart() {
+  const bar = document.getElementById('stickyCart');
+  const trigger = document.getElementById('mainCtaRow');
+  const footer = document.querySelector('.site-footer');
+  if (!bar || !trigger) return;
+
+  // Show once the main Buy Box CTA has scrolled above the viewport (user
+  // is far enough down the page that the primary buttons aren't visible),
+  // hide again once the footer comes into view so it never overlaps it.
+  let ctaVisible = true;
+  let footerVisible = false;
+
+  const update = () => {
+    const shouldShow = !ctaVisible && !footerVisible;
+    bar.classList.toggle('visible', shouldShow);
+    bar.setAttribute('aria-hidden', String(!shouldShow));
+  };
+
+  new IntersectionObserver(([entry]) => {
+    ctaVisible = entry.isIntersecting;
+    update();
+  }, { threshold: 0 }).observe(trigger);
+
+  if (footer) {
+    new IntersectionObserver(([entry]) => {
+      footerVisible = entry.isIntersecting;
+      update();
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' }).observe(footer);
+  }
+
+  // Sticky bar quantity stepper stays in sync with the main one
+  document.querySelectorAll('[data-sticky-qty]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setQty(btn.dataset.stickyQty === 'plus' ? sharedQty + 1 : sharedQty - 1);
+    });
+  });
+
+  // Keep sticky thumb/color in sync with the color swatch selection
+  const colorLabel = document.getElementById('stickyCartColor');
+  const thumb = document.getElementById('stickyCartThumb');
+  document.querySelectorAll('.swatch').forEach(s => {
+    s.addEventListener('click', () => {
+      if (colorLabel) colorLabel.textContent = s.dataset.color;
+      if (thumb && s.dataset.image) thumb.style.backgroundImage = `url('${s.dataset.image}')`;
+    });
+  });
+
+  document.getElementById('stickyAddBtn')?.addEventListener('click', () => addToCart());
+  document.getElementById('stickyBuyBtn')?.addEventListener('click', () => addToCart());
+  document.querySelector('.cta-row .btn-outline')?.addEventListener('click', () => addToCart());
+  document.querySelector('.cta-row .btn-solid')?.addEventListener('click', () => addToCart());
+}
+
+/* ---------------- Add-to-cart feedback (header badge + toast) ---------------- */
+let cartCount = 0;
+function addToCart() {
+  cartCount += sharedQty;
+  const badge = document.querySelector('.cart-count');
+  if (badge) badge.textContent = cartCount;
+  showToast(`Added ${sharedQty} to cart`);
+}
+function showToast(text) {
+  let toast = document.querySelector('.sticky-added-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'sticky-added-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 1800);
 }
 
 /* ---------------- Tabs (scroll to section) ---------------- */

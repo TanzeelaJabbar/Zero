@@ -134,7 +134,7 @@
           </div>
         </div>
 
-        <div class="cta-row">
+        <div class="cta-row" id="mainCtaRow">
           <button class="btn btn-outline">ADD TO CART</button>
           <button class="btn btn-solid">BUY NOW</button>
         </div>
@@ -574,6 +574,35 @@
     </div>
     <div class="footer-bottom">© 2026 Zero Lifestyle. All rights reserved.</div>
   </footer>
+
+  <!-- ============ STICKY ADD-TO-CART BAR ============ -->
+  <div class="sticky-cart" id="stickyCart" aria-hidden="true">
+    <div class="sticky-cart-inner">
+      <div class="sticky-cart-product">
+        <div class="sticky-cart-thumb" id="stickyCartThumb" style="background-image:url('image1.webp')"></div>
+        <div class="sticky-cart-meta">
+          <p class="sticky-cart-name">Qube Smartwatch</p>
+          <p class="sticky-cart-color" id="stickyCartColor">Starlight Silver</p>
+        </div>
+      </div>
+
+      <div class="sticky-cart-price">
+        <span class="sticky-cart-now">Rs.5,999</span>
+        <span class="sticky-cart-old">Rs.19,999</span>
+      </div>
+
+      <div class="sticky-cart-qty">
+        <button type="button" data-sticky-qty="minus" aria-label="Decrease quantity">−</button>
+        <span id="stickyQtyValue">1</span>
+        <button type="button" data-sticky-qty="plus" aria-label="Increase quantity">+</button>
+      </div>
+
+      <div class="sticky-cart-actions">
+        <button class="btn btn-outline sticky-add-btn" id="stickyAddBtn">ADD TO CART</button>
+        <button class="btn btn-solid sticky-buy-btn" id="stickyBuyBtn">BUY NOW</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ============ AR TRY-ON MODAL ============ -->
   <div class="ar-modal" id="arModal" hidden>
