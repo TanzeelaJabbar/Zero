@@ -1,1181 +1,630 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUBE Smartwatch - Zero Lifestyle</title>
-    <style>
-        /* =========================================
-           CSS RESET & VARIABLES
-           ========================================= */
-        :root {
-            --primary: #000000;
-            --secondary: #f4f4f4;
-            --accent: #2ecc71;
-            --text-dark: #333333;
-            --text-light: #777777;
-            --border: #e0e0e0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #ffffff;
-            color: var(--text-dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* =========================================
-           NAVBAR
-           ========================================= */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 100;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-
-        /* =========================================
-           PRODUCT HERO SECTION
-           ========================================= */
-        .product-hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            padding: 3rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .product-gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            position: relative;
-        }
-
-        .main-image-container {
-            background: var(--secondary);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .thumbnail-list {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .thumbnail {
-            width: 80px;
-            height: 80px;
-            background: var(--secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .thumbnail.active {
-            border-color: var(--primary);
-        }
-
-        /* AR Try On Button */
-        .try-on-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            width: 100%;
-            padding: 1rem;
-            background: rgba(46, 204, 113, 0.1);
-            color: #27ae60;
-            border: 1px dashed #27ae60;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .try-on-btn:hover {
-            background: rgba(46, 204, 113, 0.2);
-        }
-
-        /* Product Details */
-        .product-info h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .price-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .current-price {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        .original-price {
-            text-decoration: line-through;
-            color: var(--text-light);
-        }
-
-        .color-selection {
-            margin-bottom: 2rem;
-        }
-        
-        .color-options {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .color-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            cursor: pointer;
-            padding: 2px;
-            background-clip: content-box;
-        }
-        
-        .color-btn.active {
-            border-color: var(--primary);
-        }
-
-        .add-to-cart-wrapper {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .add-to-cart-btn {
-            flex: 1;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 1.2rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .add-to-cart-btn:hover {
-            opacity: 0.9;
-        }
-
-        .features-list {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid var(--border);
-            padding-top: 1.5rem;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        /* =========================================
-           NEW SECTIONS (BUNDLE, SLIDER, LATEST)
-           ========================================= */
-        .custom-section {
-            padding: 4rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-            border-top: 1px solid var(--border);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* --- Bundle Section --- */
-        .bundle-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            align-items: center;
-            justify-content: center;
-            background: #fafafa;
-            padding: 2rem;
-            border-radius: 12px;
-        }
-
-        .bundle-items {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .bundle-item {
-            position: relative;
-            text-align: center;
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .bundle-item img {
-            border-radius: 4px;
-            margin-bottom: 0.5rem;
-        }
-
-        .bundle-item .item-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .bundle-item .item-price {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        .bundle-check {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            transform: scale(1.2);
-            accent-color: var(--primary);
-        }
-
-        .bundle-math {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ccc;
-        }
-
-        .bundle-summary {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            min-width: 250px;
-        }
-
-        .old-price {
-            text-decoration: line-through;
-            color: var(--text-light);
-            font-size: 1.2rem;
-        }
-
-        .new-price {
-            color: var(--accent);
-            font-size: 1.8rem;
-        }
-
-        .bundle-savings {
-            background: rgba(46, 204, 113, 0.1);
-            color: var(--accent);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            display: inline-block;
-            margin: 1rem 0;
-        }
-
-        /* --- Series Slider --- */
-        .slider-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .series-slider {
-            display: flex;
-            gap: 2rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding: 1rem 0;
-            scrollbar-width: none;
-        }
-
-        .series-slider::-webkit-scrollbar { display: none; }
-
-        .series-card {
-            flex: 0 0 250px;
-            scroll-snap-align: start;
-            text-align: center;
-            position: relative;
-            padding: 1rem;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: transform 0.3s ease;
-            background: white;
-        }
-
-        .series-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-        }
-
-        .series-card img {
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .current-model { border: 2px solid var(--primary); }
-
-        .badge {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-        }
-
-        .slider-btn {
-            background: white;
-            border: 1px solid var(--border);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            position: absolute;
-            z-index: 10;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .prev-btn { left: -20px; }
-        .next-btn { right: -20px; }
-
-        /* --- Latest Products Grid --- */
-        .latest-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .latest-card {
-            position: relative;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .latest-card img {
-            border-radius: 12px;
-            background: #f4f4f4;
-            transition: opacity 0.3s ease;
-        }
-
-        .latest-card:hover img { opacity: 0.8; }
-
-        .latest-card h4 {
-            margin-top: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .latest-card p { color: var(--text-light); }
-
-        .new-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: var(--accent);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: bold;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            z-index: 2;
-        }
-
-        /* =========================================
-           MARKETING & REVIEWS
-           ========================================= */
-        .banner {
-            width: 100%;
-            height: 60vh;
-            background-color: #1a1a1a;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            padding: 0 5%;
-            margin-bottom: 4rem;
-        }
-        
-        .feature-card {
-            background: var(--secondary);
-            padding: 3rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 300px;
-        }
-
-        .reviews-section {
-            padding: 4rem 5%;
-            background: #fafafa;
-        }
-
-        .reviews-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .reviews-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .review-card {
-            background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .review-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            background: #eee;
-        }
-
-        /* =========================================
-           FOOTER
-           ========================================= */
-        footer {
-            background: var(--primary);
-            color: white;
-            padding: 4rem 5%;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-        }
-
-        /* =========================================
-           ADVANCED AR / QR MODAL STYLES
-           ========================================= */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .ar-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            border: none;
-            background: none;
-            color: #333;
-        }
-
-        .qr-container {
-            background: #f9f9f9;
-            padding: 1rem;
-            border-radius: 8px;
-            display: inline-block;
-            border: 1px solid #ddd;
-        }
-
-        #qrCodeImage { width: 200px; height: 200px; }
-
-        .camera-container {
-            width: 100%;
-            height: 350px;
-            background: #000;
-            margin: 1rem 0;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #webcamVideo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1);
-        }
-
-        .ar-watch-overlay {
-            position: absolute;
-            width: 160px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 10;
-            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.6));
-            mix-blend-mode: multiply;
-        }
-
-        .cam-error {
-            position: absolute;
-            color: white;
-            font-weight: bold;
-            display: none;
-            z-index: 20;
-            background: #e74c3c;
-            padding: 10px 15px;
-            border-radius: 5px;
-        }
-
-        .ar-controls {
-            display: flex;
-            justify-content: center;
-            margin-top: 1rem;
-        }
-
-        /* =========================================
-           AI CHATBOT WIDGET STYLES
-           ========================================= */
-        .chatbot-container {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 999;
-        }
-
-        .chatbot-btn {
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .chatbot-btn:hover { transform: scale(1.1); }
-
-        .chatbot-window {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            width: 320px;
-            height: 400px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chatbot-header {
-            background: var(--primary);
-            color: white;
-            padding: 1rem;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .chatbot-header button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .chatbot-messages {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            background: #f9f9f9;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 0.8rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-
-        .message.bot {
-            background: #e0e0e0;
-            align-self: flex-start;
-        }
-
-        .chatbot-input {
-            display: flex;
-            border-top: 1px solid var(--border);
-            padding: 0.5rem;
-            background: white;
-        }
-
-        .chatbot-input input {
-            flex: 1;
-            padding: 0.8rem;
-            border: none;
-            outline: none;
-        }
-
-        .chatbot-input button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* Responsive Fixes */
-        @media (max-width: 900px) {
-            .product-hero { grid-template-columns: 1fr; }
-            .feature-grid { grid-template-columns: 1fr; }
-            footer { grid-template-columns: 1fr 1fr; }
-            .bundle-items { flex-direction: column; }
-            .bundle-math { transform: rotate(90deg); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qube Smartwatch – ZERO</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-    <!-- Navbar -->
-    <nav>
-        <div class="logo"><h2>ZERO</h2></div>
-        <ul class="nav-links">
-            <li><a href="#">Smartwatches</a></li>
-            <li><a href="#">Earbuds</a></li>
-            <li><a href="#">Accessories</a></li>
-        </ul>
-        <div class="cart-icon">🛒</div>
-    </nav>
+  <!-- ============ ANNOUNCEMENT BAR ============ -->
+  <div class="announce-bar">
+    <div class="announce-track">
+      <span class="announce-item">LIMITED STOCK LEFT!</span>
+      <span class="announce-dot">•</span>
+      <span class="announce-item highlight">AZADI CELEBRATION ENDS IN <span class="countdown"
+          data-countdown>00:40:54</span></span>
+      <span class="announce-dot">•</span>
+      <span class="announce-item">LIMITED STOCK LEFT!</span>
+      <span class="announce-dot">•</span>
+      <span class="announce-item highlight">AZADI CELEBRATION ENDS IN <span class="countdown"
+          data-countdown>00:40:54</span></span>
+      <span class="announce-dot">•</span>
+      <span class="announce-item">LIMITED STOCK LEFT!</span>
+    </div>
+  </div>
 
-    <!-- Main Content Area -->
-    <main>
-        <!-- 1. Hero & Product Info Section -->
-        <section class="product-hero">
-            <div class="product-gallery">
-                <div class="main-image-container">
-                    <img id="mainImage" src="https://placehold.co/600x600/eaeaea/333333?text=QUBE+Watch+Beige" alt="QUBE Smartwatch">
-                </div>
-                <div class="thumbnail-list">
-                    <div class="thumbnail active" onclick="changeImage(this, 'Beige')">
-                        <img src="https://placehold.co/80x80/eaeaea/333333?text=Beige" alt="Thumb 1">
-                    </div>
-                    <div class="thumbnail" onclick="changeImage(this, 'Black')">
-                        <img src="https://placehold.co/80x80/1a1a1a/ffffff?text=Black" alt="Thumb 2">
-                    </div>
-                    <div class="thumbnail" onclick="changeImage(this, 'Silver')">
-                        <img src="https://placehold.co/80x80/cccccc/333333?text=Silver" alt="Thumb 3">
-                    </div>
-                </div>
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <span class="logo-mark">Z</span> ZERO
+      </a>
+      <nav class="main-nav">
+        <a href="#">Home</a>
+        <a href="#">Smart Watches</a>
+        <a href="#">Zero Earbuds</a>
+        <a href="#">Headphones</a>
+        <a href="#" class="active">Speakers</a>
+        <a href="#">Power Banks</a>
+        <a href="#">Support</a>
+        <a href="#">Corporate</a>
+      </nav>
+      <div class="header-icons">
+        <button class="icon-btn" aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+        <button class="icon-btn cart-btn" aria-label="Cart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+            <path d="M3 6h18" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          <span class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
 
-                <!-- AR Try On Button -->
-                <button class="try-on-btn" onclick="openARModal()">
-                    📷 Try on your wrist (AR View)
-                </button>
-            </div>
-
-            <div class="product-info">
-                <h1>QUBE</h1>
-                <p style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">In Stock</p>
-                
-                <div class="price-container">
-                    <span class="current-price">Rs. 8,999</span>
-                    <span class="original-price">Rs. 15,999</span>
-                </div>
-
-                <div class="color-selection">
-                    <p>Color: <span id="colorName">Beige</span></p>
-                    <div class="color-options">
-                        <div class="color-btn active" style="background-color: #dcd4c8;" onclick="selectColor(this, 'Beige')"></div>
-                        <div class="color-btn" style="background-color: #222;" onclick="selectColor(this, 'Midnight Black')"></div>
-                        <div class="color-btn" style="background-color: #b5b5b5;" onclick="selectColor(this, 'Lunar Silver')"></div>
-                    </div>
-                </div>
-
-                <div class="add-to-cart-wrapper">
-                    <button class="add-to-cart-btn">Add to Cart</button>
-                </div>
-
-                <div class="features-list">
-                    <div>🚚 Free Shipping</div>
-                    <div>🛡️ 1 Year Warranty</div>
-                    <div>🔄 7 Days Return</div>
-                </div>
-                
-                <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem;">
-                    <h3>Key Features</h3>
-                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: var(--text-light);">
-                        <li>1.96" AMOLED Display</li>
-                        <li>Bluetooth Calling</li>
-                        <li>Up to 5 Days Battery</li>
-                        <li>Health & Fitness Tracking</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. Frequently Bought Together (Bundle) -->
-        <section class="custom-section bundle-section">
-            <h2 class="section-title">Frequently Bought Together</h2>
-            <div class="bundle-wrapper">
-                <div class="bundle-items">
-                    <div class="bundle-item">
-                        <img src="https://placehold.co/150x150/eaeaea/333333?text=QUBE" alt="QUBE Watch">
-                        <p class="item-name">QUBE Watch</p>
-                        <p class="item-price">Rs. 8,999</p>
-                    </div>
-                    <div class="bundle-math">+</div>
-                    <div class="bundle-item">
-                        <input type="checkbox" checked class="bundle-check">
-                        <img src="https://placehold.co/150x150/111111/ffffff?text=Zero+Buds" alt="Zero Earbuds">
-                        <p class="item-name">Zero Earbuds</p>
-                        <p class="item-price">Rs. 3,499</p>
-                    </div>
-                    <div class="bundle-math">+</div>
-                    <div class="bundle-item">
-                        <input type="checkbox" checked class="bundle-check">
-                        <img src="https://placehold.co/150x150/dcd4c8/333333?text=Leather+Strap" alt="Extra Strap">
-                        <p class="item-name">Leather Strap</p>
-                        <p class="item-price">Rs. 999</p>
-                    </div>
-                </div>
-                <div class="bundle-summary">
-                    <p>Total Price:</p>
-                    <h3><span class="old-price">Rs. 13,497</span> <span class="new-price">Rs. 11,999</span></h3>
-                    <p class="bundle-savings">You save Rs. 1,498!</p>
-                    <button class="add-to-cart-btn" style="width: 100%; font-size: 0.9rem;">Add Bundle to Cart</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Series-wise Slider -->
-        <section class="custom-section">
-            <h2 class="section-title">Explore The QUBE Series</h2>
-            <div class="slider-container">
-                <button class="slider-btn prev-btn" onclick="slideSeries(-1)">&#10094;</button>
-                <div class="series-slider" id="seriesSlider">
-                    <div class="series-card">
-                        <img src="https://placehold.co/200x200/eee/333?text=QUBE+Lite" alt="QUBE Lite">
-                        <h3>QUBE Lite</h3>
-                        <p>Rs. 5,999</p>
-                    </div>
-                    <div class="series-card current-model">
-                        <div class="badge">You are viewing</div>
-                        <img src="https://placehold.co/200x200/eaeaea/333?text=QUBE" alt="QUBE">
-                        <h3>QUBE</h3>
-                        <p>Rs. 8,999</p>
-                    </div>
-                    <div class="series-card">
-                        <img src="https://placehold.co/200x200/333/fff?text=QUBE+Pro" alt="QUBE Pro">
-                        <h3>QUBE Pro</h3>
-                        <p>Rs. 12,999</p>
-                    </div>
-                    <div class="series-card">
-                        <img src="https://placehold.co/200x200/111/gold?text=QUBE+Ultra" alt="QUBE Ultra">
-                        <h3>QUBE Ultra</h3>
-                        <p>Rs. 18,999</p>
-                    </div>
-                </div>
-                <button class="slider-btn next-btn" onclick="slideSeries(1)">&#10095;</button>
-            </div>
-        </section>
-
-        <!-- 4. Marketing Banners -->
-        <section class="banner">
-            <div>
-                <h2 style="font-size: 4rem; text-transform: uppercase;">QUBE</h2>
-                <p>Define Your Style</p>
-            </div>
-        </section>
-
-        <section class="feature-grid">
-            <div class="feature-card">
-                <h3>Power That Lasts<br>5 Days Playtime</h3>
-            </div>
-            <div class="feature-card" style="background: #111; color: white;">
-                <h3>Crystal Clear<br>BT Calling</h3>
-            </div>
-        </section>
-
-        <!-- 5. Latest Arrivals -->
-        <section class="custom-section">
-            <h2 class="section-title">Latest Arrivals</h2>
-            <div class="latest-grid">
-                <div class="latest-card">
-                    <span class="new-badge">NEW</span>
-                    <img src="https://placehold.co/250x250/f9f9f9/333?text=Phantom+Watch" alt="New Watch">
-                    <h4>Phantom Series</h4>
-                    <p>Rs. 10,499</p>
-                </div>
-                <div class="latest-card">
-                    <span class="new-badge">NEW</span>
-                    <img src="https://placehold.co/250x250/f9f9f9/333?text=Aura+Ring" alt="Smart Ring">
-                    <h4>Zero Smart Ring</h4>
-                    <p>Rs. 15,999</p>
-                </div>
-                <div class="latest-card">
-                    <span class="new-badge">NEW</span>
-                    <img src="https://placehold.co/250x250/f9f9f9/333?text=Bass+Pods+Max" alt="Earbuds">
-                    <h4>Bass Pods Max</h4>
-                    <p>Rs. 4,999</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. Reviews Section -->
-        <section class="reviews-section">
-            <div class="reviews-header">
-                <h2>Customer Reviews</h2>
-                <p>See what our community is saying</p>
-            </div>
-            <div class="reviews-grid">
-                <div class="review-card">
-                    <img src="https://placehold.co/300x200/ddd/555?text=Customer+Photo+1" class="review-img" alt="Review 1">
-                    <p>⭐⭐⭐⭐⭐</p>
-                    <p><strong>Amazing quality!</strong> The display is super bright and the battery life is exactly as advertised.</p>
-                </div>
-                <div class="review-card">
-                    <img src="https://placehold.co/300x200/ccc/444?text=Customer+Photo+2" class="review-img" alt="Review 2">
-                    <p>⭐⭐⭐⭐⭐</p>
-                    <p><strong>Best purchase.</strong> Love the bluetooth calling feature.</p>
-                </div>
-                <div class="review-card">
-                    <img src="https://placehold.co/300x200/eee/666?text=Customer+Photo+3" class="review-img" alt="Review 3">
-                    <p>⭐⭐⭐⭐</p>
-                    <p><strong>Great value for money.</strong> The beige strap looks very premium.</p>
-                </div>
-                <div class="review-card">
-                    <img src="https://placehold.co/300x200/bbb/333?text=Customer+Photo+4" class="review-img" alt="Review 4">
-                    <p>⭐⭐⭐⭐⭐</p>
-                    <p><strong>Highly recommended!</strong> Seamless connection with my phone.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div>
-            <h3>ZERO</h3>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #ccc;">Redefining lifestyle tech for the modern era.</p>
-        </div>
-        <div>
-            <h4>Quick Links</h4>
-            <ul style="list-style: none; margin-top: 1rem; line-height: 2;">
-                <li>Search</li>
-                <li>About Us</li>
-                <li>Contact</li>
-            </ul>
-        </div>
-        <div>
-            <h4>Policies</h4>
-            <ul style="list-style: none; margin-top: 1rem; line-height: 2;">
-                <li>Shipping Policy</li>
-                <li>Refund Policy</li>
-                <li>Privacy Policy</li>
-            </ul>
-        </div>
-        <div>
-            <h4>Newsletter</h4>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #ccc;">Subscribe to get special offers.</p>
-            <input type="email" placeholder="Enter email" style="padding: 0.5rem; margin-top: 0.5rem; width: 100%;">
-        </div>
-    </footer>
-
-    <!-- =========================================
-         ADVANCED AR / QR MODAL
-         ========================================= -->
-    <div class="modal-overlay" id="arModal">
-        <div class="modal-content ar-content">
-            <button class="close-modal" onclick="closeARModal()">&times;</button>
-            
-            <!-- State 1: Desktop (QR Code) -->
-            <div id="desktopQRState" style="display: none;">
-                <h2>Try It On Your Wrist!</h2>
-                <p style="color: #666; margin-bottom: 1rem;">Scan this QR code with your mobile phone to open the AR Camera.</p>
-                <div class="qr-container">
-                    <img id="qrCodeImage" src="" alt="QR Code">
-                </div>
-                <p style="margin-top: 1rem; font-size: 0.9rem; font-weight: bold;">Waiting for you to scan...</p>
-            </div>
-
-            <!-- State 2: Mobile (Camera & AR Overlay) -->
-            <div id="mobileCameraState" style="display: none;">
-                <h2>Virtual Try-On</h2>
-                <p style="color: #666; font-size: 0.9rem;">Point your camera at your wrist</p>
-                
-                <div class="camera-container">
-                    <video id="webcamVideo" autoplay playsinline></video>
-                    <!-- Simulated 3D Watch Overlay -->
-                    <img src="https://m.media-amazon.com/images/I/61ZjlBOvnQL._SL1500_.jpg" class="ar-watch-overlay" id="watchOverlay" alt="Watch Overlay">
-                    
-                    <div id="camError" class="cam-error">Camera access denied.</div>
-                </div>
-                
-                <div class="ar-controls">
-                    <button class="add-to-cart-btn" onclick="takeSnapshot()">📸 Capture Fit</button>
-                </div>
-            </div>
-        </div>
+  <main>
+    <!-- ============ BREADCRUMB ============ -->
+    <div class="container breadcrumb">
+      <a href="#">Home</a> / <span>Qube Smartwatch</span>
     </div>
 
-    <!-- =========================================
-         AI CHATBOT WIDGET
-         ========================================= -->
-    <div class="chatbot-container">
-        <div class="chatbot-window" id="chatbotWindow">
-            <div class="chatbot-header">
-                <span>Zero AI Assistant</span>
-                <button onclick="toggleChatbot()">▼</button>
-            </div>
-            <div class="chatbot-messages" id="chatMessages">
-                <div class="message bot">Hi there! 👋 I'm the Zero AI assistant. Are you looking for information on the QUBE smartwatch?</div>
-            </div>
-            <div class="chatbot-input">
-                <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="handleChatEnter(event)">
-                <button onclick="sendMessage()">Send</button>
-            </div>
+    <!-- ============ PRODUCT HERO ============ -->
+    <section class="container product-hero">
+      <div class="product-gallery">
+        <div class="gallery-main">
+          <div class="ph-image ph-watch-hero" id="mainProductImage" aria-label="Qube Smartwatch product photo" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+          <button class="ar-launch-btn" id="arLaunchBtn" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="m3.27 6.96 8.73 5.04 8.73-5.04" />
+              <path d="M12 22.08V12" />
+            </svg>
+            Try in AR
+          </button>
         </div>
-        <button class="chatbot-btn" id="chatbotBtn" onclick="toggleChatbot()">💬</button>
+        <div class="gallery-thumbs">
+          <!-- <button class="thumb active" data-img="hero"><span class="ph-image ph-thumb-1"></span></button> -->
+          <!-- <button class="thumb" data-img="2"><span class="ph-image ph-thumb-2"></span></button>
+          <button class="thumb" data-img="3"><span class="ph-image ph-thumb-3"></span></button>
+          <button class="thumb" data-img="4"><span class="ph-image ph-thumb-4"></span></button>
+          <button class="thumb" data-img="5"><span class="ph-image ph-thumb-5"></span></button>
+          <button class="thumb" data-img="6"><span class="ph-image ph-thumb-6"></span></button> -->
+          <button class="thumb active" data-img="image1"><img src="image1.webp" alt="Product view image 1"
+              style="width: 100%; height: 100%; object-fit: cover;"></button>
+          <button class="thumb" data-img="image3"><img src="image3.webp" alt="Product view image 3"
+              style="width: 100%; height: 100%; object-fit: cover;"></button>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <p class="pre-order">PRE ORDER NOW</p>
+        <div class="pi-title-row">
+          <h1>Qube Smartwatch</h1>
+          <div class="rating"><span class="stars">★★★★★</span> 98 reviews</div>
+        </div>
+        <p class="stock-line">LOW STOCK &nbsp;|&nbsp; Swift UI</p>
+
+        <div class="price-row">
+          <span class="price-now">Rs.5,999</span>
+          <span class="price-old">Rs.19,999</span>
+        </div>
+
+        <div class="sale-bar">
+          <span class="sale-off">70% OFF</span>
+          <span class="sale-timer">Sale Might End In <strong data-sale-timer>00h 07m 11s</strong></span>
+        </div>
+
+        <p class="viewers">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+          1509+ People viewed this in the last 7 days
+        </p>
+
+        <div class="color-select">
+          <p class="cs-label">Color: <span id="selectedColor">Starlight Silver</span></p>
+          <div class="color-swatches">
+            <button class="swatch active" data-color="Starlight Silver" data-image="image1.webp"><span
+                class="ph-image ph-swatch-1" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></span></button>
+            <button class="swatch" data-color="Midnight Black" data-image="image3.webp"><span class="ph-image ph-swatch-2" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></span></button>
+            <button class="swatch" data-color="Graphite Grey" data-image="image1.webp"><span class="ph-image ph-swatch-3" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></span></button>
+            <button class="swatch" data-color="Rose Pink" data-image="image3.webp"><span class="ph-image ph-swatch-4" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></span></button>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <button class="btn btn-outline">ADD TO CART</button>
+          <button class="btn btn-solid">BUY NOW</button>
+        </div>
+
+        <div class="qty-row">
+          <span>Quantity:</span>
+          <div class="qty-stepper">
+            <button type="button" data-qty="minus">−</button>
+            <span id="qtyValue">1</span>
+            <button type="button" data-qty="plus">+</button>
+          </div>
+        </div>
+
+        <!-- ============ FREQUENTLY BOUGHT TOGETHER (compact) ============ -->
+        <div class="fbt-mini" id="bundleSection">
+          <p class="fbt-mini-title">Frequently Bought Together</p>
+          <div class="fbt-mini-row" id="bundleRow">
+            <div class="fbt-mini-item fbt-mini-main">
+              <div class="fbt-mini-thumb ph-image ph-thumb-1" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+            </div>
+            <span class="fbt-mini-plus">+</span>
+            <div class="fbt-mini-item" data-price="1499" data-name="Zero Silicone Strap">
+              <label class="fbt-mini-check">
+                <input type="checkbox" checked data-bundle-checkbox>
+                <span class="fbt-mini-checkmark"></span>
+              </label>
+              <div class="fbt-mini-thumb ph-image ph-bundle-1" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+              <p class="fbt-mini-name">Strap</p>
+              <p class="fbt-mini-price">+Rs.1,499</p>
+            </div>
+            <span class="fbt-mini-plus">+</span>
+            <div class="fbt-mini-item" data-price="2299" data-name="Zero Wireless Earbuds">
+              <label class="fbt-mini-check">
+                <input type="checkbox" checked data-bundle-checkbox>
+                <span class="fbt-mini-checkmark"></span>
+              </label>
+              <div class="fbt-mini-thumb ph-image ph-bundle-2" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+              <p class="fbt-mini-name">Earbuds</p>
+              <p class="fbt-mini-price">+Rs.2,299</p>
+            </div>
+            <div class="fbt-mini-total">
+              <span>Total</span>
+              <strong id="bundleTotal">Rs.9,797</strong>
+              <button class="fbt-mini-add" id="bundleAddBtn">Add All</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="corporate-deal">
+          <span class="bulk-tag">BULK ORDER</span>
+          <div class="deal-row">
+            <span>Corporate Deal</span>
+            <a href="#">Click To Enquire</a>
+          </div>
+        </div>
+
+        <div class="trust-icons">
+          <div class="trust-item">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="8" r="6" />
+              <path d="M9 14 6 22l6-3 6 3-3-8" />
+            </svg>
+            <span>1 Year<br>Warranty</span>
+          </div>
+          <div class="trust-item">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="1" y="6" width="15" height="12" rx="1" />
+              <path d="M16 10h4l3 3v5h-7z" />
+              <circle cx="6" cy="20" r="2" />
+              <circle cx="18" cy="20" r="2" />
+            </svg>
+            <span>Free<br>Shipping</span>
+          </div>
+          <div class="trust-item">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M7 10v12" />
+              <path
+                d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" />
+            </svg>
+            <span>2,000,000<br>Customers</span>
+          </div>
+          <div class="trust-item">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.99 6.57 2.6" />
+              <polyline points="21 3 21 9 15 9" />
+            </svg>
+            <span>7 Days<br>Replacement</span>
+          </div>
+        </div>
+      </div>
+    </section>
+        <!-- ============ EXPLORE THE QUBE SERIES (SLIDER) ============ -->
+    <section class="container series-slider">
+      <div class="series-head">
+        <h2>Explore The Qube Series</h2>
+        <div class="series-nav">
+          <button class="series-arrow" id="seriesPrev" aria-label="Previous">‹</button>
+          <button class="series-arrow" id="seriesNext" aria-label="Next">›</button>
+        </div>
+      </div>
+      <div class="series-track" id="seriesTrack">
+        <div class="series-card active">
+          <div class="ph-image ph-series-1" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+          <p class="series-name">Qube</p>
+          <p class="series-price">Rs.5,999</p>
+        </div>
+        <div class="series-card">
+          <div class="ph-image ph-series-2" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+          <p class="series-name">Qube Pro</p>
+          <p class="series-price">Rs.7,499</p>
+        </div>
+        <div class="series-card">
+          <div class="ph-image ph-series-3" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+          <p class="series-name">Qube Lite</p>
+          <p class="series-price">Rs.4,499</p>
+        </div>
+        <div class="series-card">
+          <div class="ph-image ph-series-4" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+          <p class="series-name">Qube Max</p>
+          <p class="series-price">Rs.8,999</p>
+        </div>
+        <div class="series-card">
+          <div class="ph-image ph-series-5" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+          <p class="series-name">Qube Round</p>
+          <p class="series-price">Rs.6,499</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TABS ============ -->
+    <div class="container tabs-row">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="review">Review</button>
+      <button class="tab" data-tab="specs">Specs</button>
+      <button class="tab" data-tab="faq">FAQ</button>
     </div>
 
-    <!-- =========================================
-         JAVASCRIPT LOGIC
-         ========================================= -->
-    <script>
-        // --- 1. Product Image & Color Logic ---
-        function changeImage(element, colorText) {
-            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-            element.classList.add('active');
-            
-            const mainImg = document.getElementById('mainImage');
-            if(colorText === 'Black') {
-                mainImg.src = 'https://placehold.co/600x600/1a1a1a/ffffff?text=QUBE+Watch+Black';
-            } else if (colorText === 'Silver') {
-                mainImg.src = 'https://placehold.co/600x600/cccccc/333333?text=QUBE+Watch+Silver';
-            } else {
-                mainImg.src = 'https://placehold.co/600x600/eaeaea/333333?text=QUBE+Watch+Beige';
-            }
-        }
+    <!-- ============ QUBE HERO BANNER ============ -->
+    <section class="qube-banner">
+      <div class="qube-banner-inner">
+        <div class="qube-copy">
+          <h2 class="qube-logo">QUBE<span>by ZERO</span></h2>
+          <p class="qube-tag">BREAK THE PATTERN</p>
+          <p class="qube-offer">Extra <strong>1,000 Rs</strong> Off On Limited Pre Book</p>
+          <button class="btn btn-pill">Live Now</button>
+        </div>
+        <div class="ph-image ph-qube-watches" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+      </div>
+    </section>
 
-        function selectColor(element, colorName) {
-            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('colorName').innerText = colorName;
-            
-            const thumbnails = document.querySelectorAll('.thumbnail');
-            if(colorName.includes('Black')) thumbnails[1].click();
-            else if(colorName.includes('Silver')) thumbnails[2].click();
-            else thumbnails[0].click();
-        }
 
-        // --- 2. Series Slider Logic ---
-        function slideSeries(direction) {
-            const slider = document.getElementById('seriesSlider');
-            const scrollAmount = 280; 
-            if (direction === 1) {
-                slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            } else {
-                slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            }
-        }
 
-        // --- 3. AI Chatbot Logic ---
-        function toggleChatbot() {
-            const chatWindow = document.getElementById('chatbotWindow');
-            const chatBtn = document.getElementById('chatbotBtn');
-            if (chatWindow.style.display === 'flex') {
-                chatWindow.style.display = 'none';
-                chatBtn.style.transform = 'scale(1)';
-            } else {
-                chatWindow.style.display = 'flex';
-                chatBtn.style.transform = 'scale(0)';
-            }
-        }
+    <!-- ============ FEATURE GRID ============ -->
+    <section class="container feature-grid">
+      <div class="fg-card">
+        <div class="ph-image ph-fg-1" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+        <div class="fg-label">1.85" Fluid<br>Display</div>
+      </div>
+      <div class="fg-card">
+        <div class="ph-image ph-fg-2" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+        <div class="fg-label">BT Calling</div>
+      </div>
+      <div class="fg-card">
+        <div class="ph-image ph-fg-3" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+        <div class="fg-label">360<br>Interactive UI</div>
+      </div>
+      <div class="fg-card">
+        <div class="ph-image ph-fg-4" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+        <div class="fg-label">5 Days<br>Battery</div>
+      </div>
+      <div class="fg-card">
+        <div class="ph-image ph-fg-5" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+        <div class="fg-label">100+ Sports Mode</div>
+      </div>
+      <div class="fg-card">
+        <div class="ph-image ph-fg-6" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+        <div class="fg-label">IPX6 Water<br>Resistance</div>
+      </div>
+    </section>
 
-        function handleChatEnter(event) {
-            if (event.key === 'Enter') sendMessage();
-        }
+    <!-- ============ VIDEO SECTION ============ -->
+    <section class="video-section">
+      <video class="product-video" autoplay muted loop playsinline poster="">
+        <!-- Replace src with the brand's product showcase video (mp4) -->
+        <source src="assets/video/qube-showcase.mp4" type="video/mp4">
+      </video>
+    </section>
 
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
+    <!-- ============ BATTERY / POWER SECTION ============ -->
+    <section class="container split-section">
+      <div class="split-copy">
+        <h2>Power That Lasts<br>5 Days Playtime</h2>
+        <p>Stay connected without constantly reaching for the charger. Qube Smart Watch delivers up to 5 days of active
+          playtime, keeping your calls, fitness tracking, notifications, and daily tasks running smoothly.</p>
+        <div class="stat-row">
+          <div class="stat"><span class="stat-num">05</span><span class="stat-unit">Days</span>
+            <div class="stat-label">Playtime</div>
+          </div>
+          <div class="stat"><span class="stat-num">15</span><span class="stat-unit">Days</span>
+            <div class="stat-label">Standby Time</div>
+          </div>
+        </div>
+        <p>With an impressive 15 days standby time, Qube Smart Watch stays prepared even when you're not actively using
+          it.</p>
+      </div>
+      <div class="ph-image ph-charging" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+    </section>
 
-            const chatMessages = document.getElementById('chatMessages');
-            const userMsgDiv = document.createElement('div');
-            userMsgDiv.className = 'message';
-            userMsgDiv.style.alignSelf = 'flex-end';
-            userMsgDiv.style.background = 'var(--primary)';
-            userMsgDiv.style.color = 'white';
-            userMsgDiv.innerText = message;
-            chatMessages.appendChild(userMsgDiv);
-            
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+    <!-- ============ HEALTH FEATURES ============ -->
+    <section class="container health-panel">
+      <h2 class="health-title">Qube Health Feature<br>on your smart watch.</h2>
+      <div class="health-grid">
+        <div class="hg-card hg-heart">
+          <h3>Health Rate</h3>
+          <p>Track Your Heart Rate In Real-Time With The Advanced LC09A Sensor.</p>
+          <div class="ph-image ph-hg-1" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+        </div>
+        <div class="hg-card hg-spo2">
+          <h3>Spo2 Monitoring</h3>
+          <div class="ph-image ph-hg-2" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+        </div>
+        <div class="hg-card hg-water">
+          <h3>Water Reminder</h3>
+        </div>
+        <div class="hg-card hg-breath">
+          <h3>Breath Training</h3>
+          <p>Guided Breathing Exercises Help Reduce Stress And Improve Focus.</p>
+        </div>
+        <div class="hg-card hg-bp">
+          <h3>Blood Pressure</h3>
+          <p>Monitor Your Blood Pressure Anytime With Real-Time Tracking From Your Wrist.</p>
+          <div class="ph-image ph-hg-3" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+        </div>
+        <div class="hg-card hg-sleep">
+          <h3>Sleep Monitoring</h3>
+          <p>Track Your Sleep Cycles With Intelligent Monitoring That Analyzes Light And Deep Sleep Stages.</p>
+          <div class="ph-image ph-hg-4" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+        </div>
+      </div>
+    </section>
 
-            setTimeout(() => {
-                const botMsgDiv = document.createElement('div');
-                botMsgDiv.className = 'message bot';
-                
-                if (message.toLowerCase().includes('battery')) {
-                    botMsgDiv.innerText = "The QUBE smartwatch features a battery that lasts up to 5 days on a single charge!";
-                } else if (message.toLowerCase().includes('color') || message.toLowerCase().includes('strap')) {
-                    botMsgDiv.innerText = "It comes in Beige, Midnight Black, and Lunar Silver.";
-                } else {
-                    botMsgDiv.innerText = "That's a great question! Our QUBE watch has bluetooth calling, fitness tracking, and a 1.96\" AMOLED display. Can I help you add it to your cart?";
-                }
-                
-                chatMessages.appendChild(botMsgDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        }
+    <!-- ============ BT CALLING ============ -->
+    <section class="container split-section reverse">
+      <div class="ph-image ph-calling" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+      <div class="split-copy">
+        <h2>Crystal Clear<br>BT Calling</h2>
+        <p>Make and receive calls directly from your Qube Smart Watch with smooth and stable Bluetooth connectivity.
+          Stay connected on the go without taking your phone out of your pocket.</p>
+      </div>
+    </section>
 
-        // --- 4. Advanced AR & QR Modal Logic ---
-        let videoStream = null;
+    <!-- ============ WATCH FACES ============ -->
+    <section class="container faces-section">
+      <div class="faces-copy">
+        <h2>Fit With the New Faces</h2>
+        <p>Switch up your style with multiple dynamic and stylish watch faces to match your mood and outfit. Personalize
+          your Qube Smart Watch display and make every glance uniquely yours.</p>
+      </div>
+      <div class="faces-row">
+        <div class="ph-image ph-face-1 face-sm" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+        <div class="ph-image ph-face-2 face-lg" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+        <div class="ph-image ph-face-3 face-sm" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+        <div class="ph-image ph-face-4 face-lg" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></div>
+        <div class="ph-image ph-face-5 face-sm" style="background-image: url('image1.webp'); background-size: cover; background-position: center;"></div>
+      </div>
+    </section>
 
-        function openARModal() {
-            const modal = document.getElementById('arModal');
-            const desktopState = document.getElementById('desktopQRState');
-            const mobileState = document.getElementById('mobileCameraState');
-            
-            modal.style.display = 'flex';
-            
-            // Device Detection
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    <!-- ============ STAR BANNER ============ -->
+    <section class="ph-image ph-star-banner" style="background-image: url('image3.webp'); background-size: cover; background-position: center;"></section>
 
-            if (isMobile) {
-                // Show Camera on Mobile
-                desktopState.style.display = 'none';
-                mobileState.style.display = 'block';
-                startMobileCamera();
-            } else {
-                // Show QR on Desktop
-                mobileState.style.display = 'none';
-                desktopState.style.display = 'block';
-                generateQRCode();
-            }
-        }
+    <!-- ============ REVIEWS ============ -->
+    <section class="container reviews-section" id="reviews">
+      <div class="reviews-summary">
+        <div class="rs-left">
+          <h2>Customer Reviews</h2>
+          <p><span class="stars">★★★★★</span> 4.66 out of 5<br><span class="rs-count">Based on 98 reviews ✅</span></p>
+        </div>
+        <button class="btn btn-solid">Write a review</button>
+      </div>
 
-        function generateQRCode() {
-            const currentUrl = window.location.href; 
-            const qrImage = document.getElementById('qrCodeImage');
-            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(currentUrl)}`;
-        }
+      <div class="reviews-filter">
+        <label>Pictures First <span>▾</span></label>
+      </div>
 
-        async function startMobileCamera() {
-            const videoElement = document.getElementById('webcamVideo');
-            const errorElement = document.getElementById('camError');
-            
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' } 
-                });
-                videoElement.srcObject = stream;
-                videoStream = stream; 
-                errorElement.style.display = 'none';
-            } catch (err) {
-                console.error("Camera access error:", err);
-                errorElement.style.display = 'block';
-                errorElement.innerText = "Please allow camera access to try on the watch.";
-            }
-        }
+      <div class="reviews-grid" id="reviewsGrid">
+        <!-- Review cards injected by main.js -->
+      </div>
 
-        function closeARModal() {
-            const modal = document.getElementById('arModal');
-            modal.style.display = 'none';
-            
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-                videoStream = null;
-            }
-        }
+      <div class="load-more-row">
+        <button class="btn btn-solid" id="loadMoreBtn">Load More</button>
+      </div>
+    </section>
 
-        function takeSnapshot() {
-            alert("Snapshot captured! (In a production environment, this would capture the video frame + image overlay and download it).");
-        }
-    </script>
+    <!-- ============ SPECIFICATIONS ============ -->
+    <section class="container specs-section" id="specs">
+      <h2>Specifications</h2>
+      <p class="specs-package">Package Contains: 1 device, 1 charging cable, 1 user manual, warranty card</p>
+      <hr>
+      <div class="specs-copy">
+        <p>Stay connected, active, and in control with the <strong>Qube Smartwatch</strong>, designed to blend smart
+          technology with everyday convenience. Featuring a vibrant full-touch display and a sleek, modern design, Qube
+          keeps your notifications, fitness tracking, and health insights right on your wrist.</p>
+        <p>Built for daily performance, the Qube Smartwatch offers comprehensive health monitoring, smart notifications,
+          and multiple sports modes to support your active lifestyle. Whether you're tracking workouts, managing calls,
+          or monitoring your heart rate, Qube delivers reliable performance with long-lasting battery life.</p>
+        <p>With Bluetooth connectivity, intuitive controls, and a comfortable strap design, Qube is the perfect
+          companion for work, workouts, and everything in between.</p>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="container faq-section" id="faq">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q">Is the Qube Smartwatch compatible with Android and iPhone? <span>▾</span></button>
+          <div class="faq-a">Yes, the Qube Smartwatch works with both Android (8.0+) and iOS (10.0+) devices via the
+            companion app.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Does the Qube Smartwatch support call notifications? <span>▾</span></button>
+          <div class="faq-a">Yes, you'll receive call, message and app notifications directly on your wrist once paired
+            with your phone.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Is the Qube Smartwatch water resistant? <span>▾</span></button>
+          <div class="faq-a">The watch carries an IPX6 water resistance rating, protecting it from splashes, sweat and
+            light rain — it is not intended for swimming or submersion.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Does it have a full-touch display? <span>▾</span></button>
+          <div class="faq-a">Yes, it features a 1.85" full-touch fluid AMOLED-style display with smooth swipe
+            navigation.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Can I change watch faces? <span>▾</span></button>
+          <div class="faq-a">Yes, dozens of dynamic watch faces are available and more can be downloaded from the
+            companion app.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What comes inside the box? <span>▾</span></button>
+          <div class="faq-a">The box includes 1 Qube Smartwatch, 1 magnetic charging cable, a user manual and a warranty
+            card.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER LINK COLUMNS ============ -->
+    <section class="container footer-links">
+      <div class="fl-group">
+        <h3>Smart Watches</h3>
+        <div class="fl-columns">
+          <div>
+            <h4>Shop by Feature</h4>
+            <a href="#">Amoled Display Smartwatch</a>
+            <a href="#">Sports Watches</a>
+            <a href="#">Round Dial Smartwatch</a>
+            <a href="#">Big Display Smartwatch</a>
+            <a href="#">Fitness Tracker Smartwatch</a>
+          </div>
+          <div>
+            <h4>Shop By Gender</h4>
+            <a href="#">Smart Watches for Women</a>
+            <a href="#">Smart Watches for Men</a>
+          </div>
+          <div>
+            <h4>Shop By Price</h4>
+            <a href="#">Smart Watches Under 6000</a>
+            <a href="#">Smart Watches Under 7000</a>
+            <a href="#">Smart Watches Under 8000</a>
+            <a href="#">Smart Watches Under 10000</a>
+            <a href="#">Earbuds Under 4000</a>
+            <a href="#">Earbuds Under 5000</a>
+            <a href="#">Earbuds Under 10000</a>
+          </div>
+        </div>
+      </div>
+      <div class="fl-group">
+        <h3>Wireless Earbuds</h3>
+        <div class="fl-columns">
+          <div>
+            <h4>Best Earbuds</h4>
+            <a href="#">Noise Cancelling Earbuds</a>
+            <a href="#">Gaming Earbuds</a>
+            <a href="#">Anc Earbuds</a>
+            <a href="#">Best Budget Earbuds</a>
+          </div>
+          <div>
+            <h4>Shop By Feature</h4>
+            <a href="#">Android Earbuds</a>
+            <a href="#">Earbuds for Calls</a>
+          </div>
+          <div>
+            <h4>Wireless Earbuds</h4>
+            <a href="#">Wireless Sports Earbuds</a>
+            <a href="#">Wireless Swimming Earbuds</a>
+            <a href="#">Wireless Earbuds</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a href="/" class="logo footer-logo"><span class="logo-mark">Z</span> ZERO</a>
+      <div class="footer-col">
+        <h4>QUICK LINKS</h4>
+        <a href="#">Home</a>
+        <a href="#">Smart Watches</a>
+        <a href="#">Zero Earbuds</a>
+        <a href="#">Headphones</a>
+      </div>
+      <div class="footer-col">
+        <h4>SUPPORT</h4>
+        <a href="#">FAQs</a>
+        <a href="#">Track Your Order</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-col">
+        <h4>POLICY</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Warranty Policy</a>
+        <a href="#">Refund Policy</a>
+      </div>
+      <div class="footer-col">
+        <h4>FOLLOW US</h4>
+        <div class="social-row">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="X">✕</a>
+          <a href="#" aria-label="Instagram">◎</a>
+          <a href="#" aria-label="Pinterest">P</a>
+          <a href="#" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Zero Lifestyle. All rights reserved.</div>
+  </footer>
+
+  <!-- ============ AR TRY-ON MODAL ============ -->
+  <div class="ar-modal" id="arModal" hidden>
+    <div class="ar-modal-inner">
+      <button class="ar-close" id="arClose" aria-label="Close AR">✕</button>
+
+      <div class="ar-stage">
+        <video id="arVideo" playsinline autoplay muted></video>
+        <canvas id="arCanvas"></canvas>
+
+        <div class="ar-status" id="arStatus">Starting camera…</div>
+
+        <div class="ar-unsupported" id="arUnsupported" hidden>
+          <h3>AR try-on isn't available here</h3>
+          <p id="arUnsupportedReason">Your browser doesn't support camera-based AR. Try the latest Chrome (Android) or
+            Safari (iOS) over an HTTPS connection.</p>
+          <button class="btn btn-solid" id="arRetryBtn">Try Again</button>
+        </div>
+      </div>
+
+      <div class="ar-controls">
+        <button class="ar-ctrl-btn" id="arSwitchCam" title="Switch camera">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 1l4 4-4 4" />
+            <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+            <path d="M7 23l-4-4 4-4" />
+            <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+          </svg>
+        </button>
+        <div class="ar-slider-group">
+          <label>Size</label>
+          <input type="range" id="arScale" min="0.5" max="1.8" step="0.01" value="1">
+        </div>
+        <div class="ar-slider-group">
+          <label>Rotate</label>
+          <input type="range" id="arRotate" min="-45" max="45" step="1" value="0">
+        </div>
+        <button class="ar-ctrl-btn" id="arCapture" title="Capture photo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z" />
+            <circle cx="12" cy="13" r="4" />
+          </svg>
+        </button>
+      </div>
+      <p class="ar-hint">Point the camera at your wrist and hold it steady — the band will lock on automatically. Use
+        the sliders to fine-tune fit.</p>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+  <script src="ar.js"></script>
 </body>
+
 </html>
